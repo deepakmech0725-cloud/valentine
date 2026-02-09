@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Save the Date ❤️</title>
+<title>For Juhi ❤️</title>
 
 <style>
 body{
@@ -27,7 +27,34 @@ body{
 }
 
 h1{color:#ff4d6d;}
-p{color:#444;font-size:17px;line-height:1.6;}
+
+p{
+  color:#444;
+  font-size:17px;
+  line-height:1.6;
+  min-height:170px;
+}
+
+/* Blinking cursor */
+.cursor{
+  display:inline-block;
+  width:10px;
+  font-weight:bold;
+  animation:blink 1s infinite;
+}
+@keyframes blink{
+  0%,50%,100%{opacity:1}
+  25%,75%{opacity:0}
+}
+
+/* Tamil slow fade */
+.tamil{
+  animation:tamilFade 2.5s ease-in forwards;
+}
+@keyframes tamilFade{
+  from{opacity:0}
+  to{opacity:1}
+}
 
 button{
   padding:12px 24px;
@@ -35,10 +62,11 @@ button{
   border-radius:30px;
   font-size:16px;
   cursor:pointer;
-  margin:10px;
+  margin:8px;
 }
 
 #yes{background:#ff4d6d;color:white;}
+#song{background:#ffb3c1;color:#fff;}
 #no{background:#ddd;position:absolute}
 
 /* Floating hearts */
@@ -60,7 +88,6 @@ button{
   font-size:90px;
   animation:ringDrop 1.5s ease-out forwards;
 }
-
 @keyframes ringDrop{
   0%{transform:translateY(-300px) scale(.2);opacity:0}
   70%{transform:translateY(30px) scale(1.1);opacity:1}
@@ -76,7 +103,6 @@ button{
   background:white;
   animation:explode 1.2s ease-out forwards;
 }
-
 @keyframes explode{
   from{transform:scale(0);opacity:1}
   to{transform:scale(20);opacity:0}
@@ -86,36 +112,93 @@ button{
 
 <body>
 
-<audio autoplay loop>
-  <source src="https://cdn.pixabay.com/audio/2022/10/25/audio_5c9fae5f45.mp3">
-</audio>
+<!-- Tamil Song: Yedhedho Pennae -->
+<iframe
+  id="bgMusic"
+  width="0"
+  height="0"
+  src="https://www.youtube.com/embed/2V0mKkS4yJ8?enablejsapi=1"
+  frameborder="0"
+  allow="autoplay">
+</iframe>
 
 <div class="card">
   <h1>Juhi Sherin . S ❤️</h1>
-  <p>
-    Somewhere between our conversations and silences,<br>
-    you became my favorite feeling.
-    <br><br>
-    Will you be my Valentine today,<br>
-    and my forever tomorrow? 💖
-  </p>
 
-  <button id="yes" onclick="yesClicked()">Yes 💍</button>
+  <p id="question"></p>
+
+  <button id="yes" onclick="nextStep()">Next 💕</button>
+  <button id="song" onclick="playSong()">Play our song 🎧</button>
   <button id="no" onmouseover="runAway()">No 🙈</button>
 </div>
 
 <script>
+const questions = [
+  "Can I ask you something that’s been on my heart? 💭",
+  "Do you know how special you are to me? ✨",
+  "Have you ever felt that some people just feel like home? 🏡",
+  "Did you know you make my days brighter just by being you? ☀️",
+  "நீ என் வாழ்க்கையில் வந்த நாளிலிருந்து, என் உலகமே அழகாக மாறிவிட்டது 💕",
+  "என் இதயத் தோட்டத்தில் மலர்ந்த ஒரே பூ நீ தான் — என் Hibiscus 🌺",
+  "Will you be my Valentine, and my forever? 💍"
+];
+
+let index = 0;
+let charIndex = 0;
+const speed = 40;
+const questionEl = document.getElementById("question");
+
+function typeText(text){
+  const isTamil = /[அ-ஹ]/.test(text);
+  questionEl.innerHTML =
+    `<span id="typed" class="${isTamil ? 'tamil' : ''}"></span><span class="cursor">|</span>`;
+
+  const typed = document.getElementById("typed");
+  charIndex = 0;
+
+  const typing = setInterval(() => {
+    if(charIndex < text.length){
+      typed.innerHTML += text.charAt(charIndex);
+      charIndex++;
+    } else {
+      clearInterval(typing);
+    }
+  }, speed);
+}
+
+typeText(questions[index]);
+
+function nextStep(){
+  if(index < questions.length - 1){
+    index++;
+    typeText(questions[index]);
+
+    // 🎶 Start song EXACTLY at final question
+    if(index === questions.length - 1){
+      document.getElementById("yes").innerText = "Yes 💍";
+      playSong();
+    }
+  } else {
+    yesClicked();
+  }
+}
+
 function runAway(){
   const no=document.getElementById("no");
   no.style.top=Math.random()*80+"vh";
   no.style.left=Math.random()*80+"vw";
 }
 
+function playSong(){
+  const iframe=document.getElementById("bgMusic");
+  iframe.src="https://www.youtube.com/embed/2V0mKkS4yJ8?autoplay=1&loop=1&playlist=2V0mKkS4yJ8";
+}
+
 /* Floating hearts */
 function heart(){
   const h=document.createElement("div");
   h.className="heart";
-  h.innerHTML="💖 Juhi";
+  h.innerHTML="🌺 Hibiscus";
   h.style.left=Math.random()*100+"vw";
   h.style.animationDuration=(4+Math.random()*3)+"s";
   document.body.appendChild(h);
@@ -138,11 +221,15 @@ function yesClicked(){
   <div style="color:white;text-align:center;">
     <div class="ring">💍</div>
     <h1>She said YES ❤️</h1>
-    <p style="font-size:20px;">
-      <strong>SAVE THE DATE</strong><br><br>
-      June 28, 2025<br><br>
-      Our forever begins ✨
+    <p style="font-size:20px;max-width:520px;">
+      நீ என் வாழ்க்கையில் வந்த நாளிலிருந்து,<br>
+      என் உலகமே அழகாக மாறிவிட்டது 💕<br><br>
+      என் இதயத் தோட்டத்தில் மலர்ந்த ஒரே பூ நீ தான்,<br>
+      என் Hibiscus 🌺
+      <br><br>
+      Juhi, I choose you — today and always. 🥹❤️
     </p>
+    <p style="font-size:18px;">Forever starts with us ✨</p>
   </div>`;
 
   setInterval(()=>{
@@ -154,3 +241,4 @@ function yesClicked(){
 
 </body>
 </html>
+
